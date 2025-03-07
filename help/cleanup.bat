@@ -18,3 +18,14 @@ del /F /Q "%~f0"
 
 echo [*] عملیات پاکسازی کامل شد!
 exit
+
+
+
+
+reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v Updater /f
+schtasks /delete /tn WindowsUpdater /f
+taskkill /IM updater.exe /F
+del C:\Users\Public\script.bat
+del C:\Users\Public\run.vbs
+del C:\Users\Public\updater.exe
+
