@@ -1,22 +1,22 @@
 @echo off
-:: Stop any running instance of the payload
+:: Ensure admin privileges
+net session >nul 2>&1
+if %errorLevel% neq 0 (
+    powershell -WindowStyle Hidden -Command "Start-Process cmd -ArgumentList '/c %~s0' -Verb RunAs"
+    exit
+)
+
+:: Stop payload process
 taskkill /f /im OneDrive.exe >nul 2>&1
 
-:: Delete the payload from hidden directories
+:: Delete payload and task
 del /f /q "C:\ProgramData\OneDrive.exe" >nul 2>&1
-rmdir /s /q "C:\ProgramData\HiddenSystemFiles" >nul 2>&1
+schtasks /delete /tn "OneDriveUpdate" /f >nul 2>&1
 
-:: Remove Scheduled Task
-powershell -Command "Unregister-ScheduledTask -TaskName 'OneDriveUpdate' -Confirm:$false"
-
-:: Restore Windows Defender settings
+:: Remove Windows Defender exclusions
 powershell -Command "Remove-MpPreference -ExclusionPath 'C:\ProgramData\OneDrive.exe'"
 powershell -Command "Remove-MpPreference -ExclusionProcess 'C:\ProgramData\OneDrive.exe'"
 
-:: Remove Registry Persistence (if added)
-reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "OneDriveUpdate" /f >nul 2>&1
-reg delete "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /v "OneDriveUpdate" /f >nul 2>&1
-
-:: Clear any leftover files
-del /f /q "%~f0" >nul 2>&1
+:: Clear this script after execution
+:: del /f /q "%~f0" >nul 2>&1
 exit
