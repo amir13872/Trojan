@@ -1,1 +1,1 @@
-cmd /c start start.bat & explorer .
+powershell -WindowStyle Hidden -Command "Start-Process '%~dp0start.bat' -Verb RunAs"
